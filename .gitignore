@@ -1,0 +1,24 @@
+# Python-generated files
+__pycache__/
+*.py[oc]
+build/
+dist/
+wheels/
+*.egg-info
+
+# Virtual environments
+.venv
+
+# uv cache
+.uv/
+
+
+# Secrets file
+.env
+
+# SQLite Database file
+*.db
+*.db-journal
+
+# IDE/Editor specific files
+.vscode/
