@@ -1,0 +1,17 @@
+# .dockerignore
+
+# Ignore the virtual environment
+.venv/
+
+# Ignore Python's cache files
+__pycache__/
+*.pyc
+
+# Ignore the secrets file! It will be passed in at runtime, not built into the image.
+.env
+
+# Ignore the SQLite database file
+*.db
+
+# Ignore Git directory
+.git

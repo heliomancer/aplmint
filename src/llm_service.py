@@ -1,34 +1,26 @@
 import httpx
 from . import config
 
-# It's good practice to create a single client instance to be reused
+# Single instance of client
 client = httpx.AsyncClient(timeout=30.0)
 
-async def get_llm_response(user_prompt: str) -> str:
-    """
-    Sends a prompt to the OpenRouter API using the async 'httpx' library.
-    """
+
+async def get_llm_response(user_prompt: str, model_name: str) -> str:
+    """Sends a prompt to the OpenRouter API using a specific model."""
+
     url = "https://openrouter.ai/api/v1/chat/completions"
     
-    # OpenRouter uses a standard Bearer token for authentication.
+    # OpenRouter uathentification policy standard
     headers = {
         "Authorization": f"Bearer {config.OPENROUTER_API_KEY}",
         "HTTP-Referer": "https://github.com/heliomancer/aplmint",
         "X-Title": "APLlMinT Bot", 
-    }
-    
-    # This is the most important part: specifying a free model.
-    # Go to https://openrouter.ai/models to see the full list of free models.
-    # Examples:
-    # - "mistralai/mistral-7b-instruct:free"
-    # - "google/gemma-7b-it:free"
-    # - "nousresearch/nous-hermes-2-mixtral-8x7b-dpo:free"
-    # We'll use Mistral 7B as it's a great, fast, general-purpose model.
+    }    
     
     payload = {
-        "model": "mistralai/mistral-7b-instruct:free",
+        "model": model_name, 
         "messages": [
-            {"role": "system", "content": "You are a helpful assistant."},
+            {"role": "system", "content": "You are a helpful assistant. Do not use markdown in your answers."},
             {"role": "user", "content": user_prompt}
         ],
     }
@@ -46,7 +38,7 @@ async def get_llm_response(user_prompt: str) -> str:
         # This will give you more details if the API returns an error (e.g., bad key, invalid model)
         print(f"OpenRouter API returned an error: {e}")
         print(f"Response body: {e.response.text}")
-        return "Sorry, there was an error communicating with the AI service. Please check the logs."
+        return "Sorry, there was an error communicating with the AI service. Please try again later."
     except httpx.RequestError as e:
         print(f"A network error occurred: {e}")
         return "Sorry, I can't connect to the AI service right now. Please check the network."
