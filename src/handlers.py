@@ -19,7 +19,7 @@ DAILY_QUERY_LIMIT = 10
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     user = update.effective_user
     await update.message.reply_html(
-        rf"Hello {user.mention_html()}, I can process your queries for LLM. Just send your text to me. Use \model commant to choose your model.  Remember, you have {DAILY_QUERY_LIMIT} queries per day.",
+        rf"Hello {user.mention_html()}, I can process your queries for LLM. Just send your text to me. Use /model command to choose your model.  Remember, you have {DAILY_QUERY_LIMIT} queries per day.",
     )
 
 async def message_handler(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:

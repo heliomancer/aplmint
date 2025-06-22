@@ -1,8 +1,12 @@
 import httpx
+import logging
 from . import config
 
 # Single instance of client
 client = httpx.AsyncClient(timeout=30.0)
+
+# log llm queries
+logger = logging.getLogger(__name__)
 
 
 async def get_llm_response(user_prompt: str, model_name: str) -> str:
@@ -20,12 +24,12 @@ async def get_llm_response(user_prompt: str, model_name: str) -> str:
     payload = {
         "model": model_name, 
         "messages": [
-            {"role": "system", "content": "You are a helpful assistant. Do not use markdown in your answers."},
+            {"role": "system", "content": "You are a helpful assistant. Do not use markdown in your answers.source "},
             {"role": "user", "content": user_prompt}
         ],
     }
 
-    print(f"Sending prompt to OpenRouter with model {payload['model']}: '{user_prompt}'")
+    logger.info(f"Sending prompt to OpenRouter with model {payload['model']} for user.")
     try:
         response = await client.post(url, headers=headers, json=payload)
         response.raise_for_status() # This will raise an error for 4xx/5xx responses
@@ -36,12 +40,12 @@ async def get_llm_response(user_prompt: str, model_name: str) -> str:
 
     except httpx.HTTPStatusError as e:
         # This will give you more details if the API returns an error (e.g., bad key, invalid model)
-        print(f"OpenRouter API returned an error: {e}")
-        print(f"Response body: {e.response.text}")
+        logger.error(f"OpenRouter API returned an error: {e}")
+        logger.error(f"Response body: {e.response.text}")
         return "Sorry, there was an error communicating with the AI service. Please try again later."
     except httpx.RequestError as e:
-        print(f"A network error occurred: {e}")
+        logger.error(f"A network error occurred: {e}")
         return "Sorry, I can't connect to the AI service right now. Please check the network."
     except Exception as e:
-        print(f"An unexpected error occurred: {e}")
+        logger.error(f"An unexpected error occurred: {e}", exc_info=True)
         return "An unexpected error occurred while processing your request."
