@@ -29,7 +29,7 @@ async def get_llm_response(user_prompt: str, model_name: str) -> str:
         ],
     }
 
-    logger.info(f"Sending prompt to OpenRouter with model {payload['model']} for user.")
+    logger.info(f"Sending prompt {user_prompt} to OpenRouter model {payload['model']}")
     try:
         response = await client.post(url, headers=headers, json=payload)
         response.raise_for_status() # This will raise an error for 4xx/5xx responses
