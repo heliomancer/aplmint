@@ -4,8 +4,7 @@ from telegram import Update
 from telegram.ext import ContextTypes
 
 from . import database
-# +
-# from . import llm_service
+from . import llm_service
 
 logger = logging.getLogger(__name__)
 
@@ -55,21 +54,21 @@ async def message_handler(update: Update, context: ContextTypes.DEFAULT_TYPE) ->
         await context.bot.send_chat_action(chat_id=chat_id, action='typing')
         
         # Make the expensive API call
-        #llm_response = await llm_service.get_llm_response(message_text)
+        llm_response = await llm_service.get_llm_response(message_text)
 
         # Send the response
-        #await update.message.reply_text(llm_response)
+        await update.message.reply_text(llm_response)
 
         ### TEST BLOCK
-        # The placeholder response
-        response_text = (
-            f"Echo: '{message_text}'\n\n"
-            "(Note: LLM service is in development. This is a placeholder response.)"
-        )
+        # # The placeholder response
+        # response_text = (
+        #     f"Echo: '{message_text}'\n\n"
+        #     "(Note: LLM service is in development. This is a placeholder response.)"
+        # )
 
-        # simulate the LLM work
-        await asyncio.sleep(3)
-        await update.message.reply_text(response_text)
+        # # simulate the LLM work
+        # await asyncio.sleep(3)
+        # await update.message.reply_text(response_text)
         ###
 
 
